@@ -1,0 +1,13 @@
+{
+    "name": "C-witchy-42",
+    "description": "Project C-witchy-42",
+    "toolkit": "acme",
+    "sources": [
+        "src/main.asm"
+    ],
+    "build": "debug",
+    "definitions": [],
+    "includes": [],
+    "args": [],
+    "compiler": ""
+}
