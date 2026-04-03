@@ -31,6 +31,15 @@ SPRITE_INIT
     lda #(witch_sprite / 64)
     sta SPR_PTR1
 
+    ; start all large sprites
+    lda #$FF
+    sta SPR_Y_EXP
+    sta SPR_X_EXP
+
+    ; start all over bg
+    lda #$00
+    sta SPR_PRIORITY
+
     ; enable sprites
     lda #%00000011
     sta SPR_ENABLE 
@@ -56,7 +65,6 @@ SPRITE_MOVE_LEFT
     dec SPR1_X
     
 SPRITE_MOVE_LEFT_DONE
-
     ; d - right
     lda #KEY_D_ROW
     sta CIA1_PRA
@@ -73,7 +81,6 @@ SPRITE_MOVE_RIGHT
     inc SPR0_X
     inc SPR1_X
 SPRITE_MOVE_RIGHT_DONE
-
     ; w - up
     lda #KEY_W_ROW
     sta CIA1_PRA
@@ -90,7 +97,6 @@ SPRITE_MOVE_UP
     dec SPR0_Y
     dec SPR1_Y
 SPRITE_MOVE_UP_DONE
-
     ; s - down
     lda #KEY_S_ROW
     sta CIA1_PRA
@@ -107,12 +113,33 @@ SPRITE_MOVE_DOWN
     inc SPR0_Y
     inc SPR1_Y
 SPRITE_MOVE_DOWN_DONE
+    ; space - over/under flip
+    lda #KEY_SPACE_ROW
+    sta CIA1_PRA
+
+    lda CIA1_PRB
+    and #KEY_SPACE_COL
+
+    bne SPRITE_OVER_UNDER_DONE
+SPRITE_OVER_UNDER
+    ; flip size
+    lda SPR_Y_EXP
+    eor #$FF
+    sta SPR_Y_EXP
+    sta SPR_X_EXP
+
+    ; flip priority
+    lda SPR_PRIORITY
+    eor #$FF
+    sta SPR_PRIORITY
+
+SPRITE_OVER_UNDER_DONE
 
 SPRITE_READ_KEYS_DONE
     rts             ; SPRITE_READ_KEYS
 
-SPRITE_WITCH_X_MIN = 60
-SPRITE_WITCH_X_MAX = 200
-SPRITE_WITCH_Y_MIN = 130
-SPRITE_WITCH_Y_MAX = 190
+SPRITE_WITCH_X_MIN = SPR_MIN_X 
+SPRITE_WITCH_X_MAX = 255
+SPRITE_WITCH_Y_MIN = SPR_MIN_Y +4 ; hiding for scrolling
+SPRITE_WITCH_Y_MAX = 204
 

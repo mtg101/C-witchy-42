@@ -71,6 +71,8 @@ SPR_WIDTH       = 24
 SPR_COL_WIDTH   = 12
 SPR_HEIGHT      = 21
 
+SPR_MIN_X = 24
+SPR_MIN_Y = 50
 
 
 ; --- VIC-II MOBs / sprites ---

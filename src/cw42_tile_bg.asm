@@ -4,7 +4,7 @@ TILE_BG_SETUP
     jsr SCREEN_RESET_SCROLL_X
     jsr SCREEN_RESET_SCROLL_Y
 
-    lda #BROWN
+    lda #DK_GRAY
     sta BORDER_COL
 
     lda #BROWN
