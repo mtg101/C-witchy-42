@@ -172,9 +172,9 @@ SPRITE_OVER_UNDER_FLIP_SMALL
     sta SPR1_Y
 
 SPRITE_OVER_UNDER_FLIP_BIG_DONE
-    ; flip priority
+    ; flip priority of sprite 1 (0 is outline)
     lda SPR_PRIORITY
-    eor #$FF
+    eor #%00000010
     sta SPR_PRIORITY
 
     jmp SPRITE_OVER_UNDER_DONE_PRESSED
