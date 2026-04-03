@@ -136,6 +136,42 @@ SPRITE_OVER_UNDER
     sta SPR_Y_EXP
     sta SPR_X_EXP
 
+    ; offset for size
+    beq SPRITE_OVER_UNDER_FLIP_SMALL
+
+SPRITE_OVER_UNDER_FLIP_BIG
+    ; sub half sprite width
+    lda SPR0_X
+    sec                 ; Prepare for subtraction
+    sbc #(SPR_WIDTH / 2)
+    sta SPR0_X
+    sta SPR1_X
+
+    ; sub half sprite height
+    lda SPR0_Y
+    sec                 ; Prepare for subtraction
+    sbc #(SPR_HEIGHT / 2)
+    sta SPR0_Y
+    sta SPR1_Y
+
+    jmp SPRITE_OVER_UNDER_FLIP_BIG_DONE
+
+SPRITE_OVER_UNDER_FLIP_SMALL
+    ; add half sprite width
+    lda SPR0_X
+    clc                 ; Prepare for addition
+    adc #(SPR_WIDTH / 2)
+    sta SPR0_X
+    sta SPR1_X
+
+    ; add half sprite height
+    lda SPR0_Y
+    clc                 ; Prepare for subtraction
+    adc #(SPR_HEIGHT / 2)
+    sta SPR0_Y
+    sta SPR1_Y
+
+SPRITE_OVER_UNDER_FLIP_BIG_DONE
     ; flip priority
     lda SPR_PRIORITY
     eor #$FF
