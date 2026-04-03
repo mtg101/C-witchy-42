@@ -21,6 +21,9 @@
 !source "src/cw42_sprite.asm"
 !source "src/cw42_tile_bg.asm"
 
+!source "rsc/c-witchy-42 map.asm"
+
+
 MAIN
     lda #%00000111          ; msb rasterline = 0, ecm off = 0, bitmap off = 0, screen off = 0, 24 rows for scroll = 0, v_scroll max 111
     sta VIC_CR1

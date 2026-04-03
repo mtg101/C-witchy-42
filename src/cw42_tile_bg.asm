@@ -4,6 +4,18 @@ TILE_BG_SETUP
     jsr SCREEN_RESET_SCROLL_X
     jsr SCREEN_RESET_SCROLL_Y
 
+    lda #BROWN
+    sta BORDER_COL
+
+    lda #BROWN
+    sta BG_COL
+
+    lda #GREEN
+    sta BG_COL_1
+
+    lda #LT_GREEN
+    sta BG_COL_2
+
     rts
 
 

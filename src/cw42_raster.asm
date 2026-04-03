@@ -82,9 +82,6 @@ RASTER_IRQ_MAIN_SCREEN
     
     +PUSH_ALL
 
-    lda #GREEN
-    sta BORDER_COL
-
     jsr SPRITE_UPDATE_WITCH    ; wand to move every frame
 
     +RASTER_INTERRUPT_SET_ROW 246
@@ -113,9 +110,6 @@ RASTER_IRQ_BOTTOM_BORDER
     nop
 
     +PUSH_ALL
-
-    lda #BLUE
-    sta BORDER_COL
 
     ; reset after grass scrolling
     lda #CW4_CR2_0           
