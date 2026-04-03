@@ -132,7 +132,23 @@ FRAME_COUNTER
 
 
 ; --- End of code section ---
-!warn "Code size is ", $7FFF-*, " of max 0x3FFF (ending at ", *, " of max 0x7FFF)"
-!if * > $7FFF {
-    !error "Code has hit the bank 1 boundary!"
+
+!ifndef PASS1 {
+;    !warn "Pass 1"
+    PASS1 = 1
+} else {
+    !ifndef PASS2 {
+;        !warn "Pass 2"
+        PASS2 = 1
+    } else {
+        !ifndef PASS3 {
+;            !warn "Pass 3"
+            !warn "Code size is ", $7FFF-*, " of max 16383 (0x3FFF) (ending at ", *, " of max 32767 (0x7FFF))"
+            !if * > $7FFF {
+                !error "Code has hit the bank 1 boundary!"
+            }
+            PASS3 = 1
+        }
+    }
 }
+
