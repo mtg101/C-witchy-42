@@ -122,6 +122,14 @@ SPRITE_MOVE_DOWN_DONE
 
     bne SPRITE_OVER_UNDER_DONE
 SPRITE_OVER_UNDER
+    ; wait for not pressed to flip again
+    lda FLIP_PRESSED
+    bne SPRITE_OVER_UNDER_DONE_PRESSED
+
+    ; note key pressed
+    lda #$01
+    sta FLIP_PRESSED
+
     ; flip size
     lda SPR_Y_EXP
     eor #$FF
@@ -133,7 +141,14 @@ SPRITE_OVER_UNDER
     eor #$FF
     sta SPR_PRIORITY
 
+    jmp SPRITE_OVER_UNDER_DONE_PRESSED
+
 SPRITE_OVER_UNDER_DONE
+    ; not pressed to reset pressed
+    lda #$00
+    sta FLIP_PRESSED
+
+SPRITE_OVER_UNDER_DONE_PRESSED
 
 SPRITE_READ_KEYS_DONE
     rts             ; SPRITE_READ_KEYS
@@ -143,3 +158,5 @@ SPRITE_WITCH_X_MAX = 255
 SPRITE_WITCH_Y_MIN = SPR_MIN_Y +4 ; hiding for scrolling
 SPRITE_WITCH_Y_MAX = 204
 
+FLIP_PRESSED
+!byte $00
