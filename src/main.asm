@@ -132,8 +132,7 @@ FRAME_COUNTER
 
 
 ; --- End of code section ---
-!warn "Code ends at: ", *
+!warn "Code size is ", $7FFF-*, " of max 0x3FFF (ending at ", *, " of max 0x7FFF)"
 !if * > $7FFF {
     !error "Code has hit the bank 1 boundary!"
 }
-
