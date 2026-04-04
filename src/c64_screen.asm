@@ -113,13 +113,13 @@ SCREEN_CHAR_COPY_FROM_MAP
                   ; from trying to read I/O while we hide it.
 
     ; --- Setup Pointers in Zero Page ---
-    lda <charset_data
+    lda #<charset_data
     sta ZP_PTR_1       ; Source Low
 
     lda #$00
     sta ZP_PTR_2       ; Destination Low ($00 of $3000)
     
-    lda >charset_data   ; Source High
+    lda #>charset_data   ; Source High
     sta ZP_PTR_1_PAIR
     lda #$30            ; Destination High ($30 of $3000)
     sta ZP_PTR_2_PAIR
