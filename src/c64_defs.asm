@@ -43,6 +43,9 @@ BG_COL_2    = $D023
 COLOR_RAM   = $D800
 
 SCREEN_RAM  = $0400  ; default
+SCREEN_RAM_800  = $0800  ; next block
+
+
 DEFAULT_CHR = $14   ; Value for $D018 to use Uppercase/Graphics
 LOWER_CHR   = $16   ; Value for $D018 to use Lower/Upper
 

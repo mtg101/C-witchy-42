@@ -46,7 +46,7 @@ MAIN_LOOP
     lda RASTER_CHASE_BEAM
     beq MAIN_LOOP           ; not time yet...
 
-    inc FRAME_COUNTER       ; inc first, start with frame 1 procgen
+    inc FRAME_COUNTER       ; inc first, start with frame 1, will display properly come frame 0 after map & colour setup
     lda FRAME_COUNTER
     and #%00000111           ; 0-7
 
@@ -74,56 +74,56 @@ FRAME_DONE
     jmp MAIN_LOOP
 
 FRAME_0 
-    lda #CW4_CR2_0                   
-    sta TILE_BG_CR2
+    lda #CW42_CR1_0                   
+    sta TILE_BG_CR1
     jmp FRAME_DONE
 
 FRAME_1
-    lda #CW4_CR2_1
-    sta TILE_BG_CR2
+    lda #CW42_CR1_1
+    sta TILE_BG_CR1
     jmp FRAME_DONE
 
 FRAME_2
-    lda #CW4_CR2_2
-    sta TILE_BG_CR2
+    lda #CW42_CR1_2
+    sta TILE_BG_CR1
     jmp FRAME_DONE
 
 FRAME_3
-    lda #CW4_CR2_3
-    sta TILE_BG_CR2
+    lda #CW42_CR1_3
+    sta TILE_BG_CR1
     jmp FRAME_DONE
 
 FRAME_4
-    lda #CW4_CR2_4
-    sta TILE_BG_CR2
+    lda #CW42_CR1_4
+    sta TILE_BG_CR1
     jmp FRAME_DONE
 
 FRAME_5
-    lda #CW4_CR2_5
-    sta TILE_BG_CR2
+    lda #CW42_CR1_5
+    sta TILE_BG_CR1
     jmp FRAME_DONE
 
 FRAME_6
-    lda #CW4_CR2_6
-    sta TILE_BG_CR2
+    lda #CW42_CR1_6
+    sta TILE_BG_CR1
     jmp FRAME_DONE
 
 FRAME_7
-    lda #CW4_CR2_7
-    sta TILE_BG_CR2
+    lda #CW42_CR1_7
+    sta TILE_BG_CR1
     jmp FRAME_DONE
 
 ; all options jumped back
 
 
-CW4_CR2_0 = %11000111
-CW4_CR2_1 = %11000110
-CW4_CR2_2 = %11000101
-CW4_CR2_3 = %11000100
-CW4_CR2_4 = %11000011
-CW4_CR2_5 = %11000010
-CW4_CR2_6 = %11000001
-CW4_CR2_7 = %11000000
+CW42_CR1_0 = %00010111
+CW42_CR1_1 = %00010110
+CW42_CR1_2 = %00010101
+CW42_CR1_3 = %00010100
+CW42_CR1_4 = %00010011
+CW42_CR1_5 = %00010010
+CW42_CR1_6 = %00010001
+CW42_CR1_7 = %00010000
 
 
 FRAME_COUNTER

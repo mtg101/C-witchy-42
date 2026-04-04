@@ -82,7 +82,9 @@ RASTER_IRQ_MAIN_SCREEN
     
     +PUSH_ALL
 
-    jsr SPRITE_UPDATE_WITCH    ; wand to move every frame
+    lda #01
+    sta RASTER_CHASE_BEAM   ; tell main loop to go!
+
 
     +RASTER_INTERRUPT_SET_ROW 246
     +ACK_IRQ
@@ -110,6 +112,11 @@ RASTER_IRQ_BOTTOM_BORDER
     nop
 
     +PUSH_ALL
+
+    jsr SPRITE_UPDATE_WITCH    ; want to move every frame
+
+    lda TILE_BG_CR1
+    sta VIC_CR1
 
     +RASTER_INTERRUPT_SET_ROW 54
     +ACK_IRQ

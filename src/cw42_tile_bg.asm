@@ -141,6 +141,6 @@ TILE_BG_COL_COL_LOOP
 
 
 
-TILE_BG_CR2
+TILE_BG_CR1
     !byte   $00
 
