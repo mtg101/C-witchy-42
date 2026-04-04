@@ -111,10 +111,6 @@ RASTER_IRQ_BOTTOM_BORDER
 
     +PUSH_ALL
 
-    ; reset after grass scrolling
-    lda #CW4_CR2_0           
-    sta VIC_CR2
-
     +RASTER_INTERRUPT_SET_ROW 54
     +ACK_IRQ
     +SET_IRQ RASTER_IRQ_MAIN_SCREEN

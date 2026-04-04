@@ -1,29 +1,5 @@
 
 
-SCREEN_SET_MULTI_COLOR_CHARACTER_MODE
-    lda VIC_CR2
-    ora #H_MULTICOLOR 
-    sta VIC_CR2
-    rts
-
-SCREEN_SET_HI_RES_CHARACTER_MODE
-    lda VIC_CR2
-    and #H_HI_RES 
-    sta VIC_CR2
-    rts
-
-SCREEN_SET_HOZ_SCROLLING_38
-    lda VIC_CR2
-    and #H_COL_38  
-    sta VIC_CR2
-    rts
-
-SCREEN_SET_HOZ_STATIC_40
-    lda VIC_CR2
-    ora #H_COL_40
-    sta VIC_CR2
-    rts
-
 SCREEN_OFF
     lda VIC_CR1
     and #%11101111 ; Clear Bit 4 
@@ -36,36 +12,6 @@ SCREEN_ON
     sta VIC_CR1
     rts    
 
-SCREEN_RESET_SCROLL_X
-    lda VIC_CR2
-    ora #%00000111  ; set 7 (no scroll)
-    sta VIC_CR2
-    rts
-
-SCREEN_DEC_SCROLL_X    
-    lda VIC_CR2
-    pha                 ; Push a copy to the stack to keep the "high bits" safe
-    
-    ; 1. Isolate and decrement the scroll
-    and #%00000111  ; Keep only bits 0-2
-    sec                 ; Prepare for subtraction
-    sbc #$01        ; Subtract 1
-    and #%00000111  ; "Wrap" the value (if it was 0, it becomes 7)
-    sta ZP_PTR_1    ; Store this new scroll value in a temp Zero Page address
-    
-    ; 2. Combine with original high bits
-    pla                 ; Pull the original register value back
-    and #%11111000  ; Clear the old scroll bits (keep width/multi-color)
-    ora ZP_PTR_1    ; Merge in the new scroll value
-    sta VIC_CR2
-    rts
-
-
-SCREEN_RESET_SCROLL_Y
-    lda VIC_CR1
-    and #%00000111 ; set 7 (no scroll)
-    sta VIC_CR1
-    rts
 
 SCREEN_CHAR_COPY_ROM_3000
      sei          ; Disable interrupts to prevent the Kernal 

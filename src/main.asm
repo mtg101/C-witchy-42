@@ -27,7 +27,7 @@
 MAIN
     lda #%00000111          ; msb rasterline = 0, ecm off = 0, bitmap off = 0, screen off = 0, 24 rows for scroll = 0, v_scroll max 111
     sta VIC_CR1
-    lda #%11011111          ; 110 static, mcm on = 1, col 40 wide = 1, x-scroll max = 111
+    lda #%11011000          ; 110 static, mcm on = 1, col 40 wide = 1, x-scroll min = 000
     sta VIC_CR2
     jsr ROM_CLR_SCREEN
     jsr MATHS_SETUP_RNG

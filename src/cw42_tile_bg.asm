@@ -1,9 +1,5 @@
 
 TILE_BG_SETUP
-    ; reset scroll offsets
-    jsr SCREEN_RESET_SCROLL_X
-    jsr SCREEN_RESET_SCROLL_Y
-
     lda #DK_GRAY
     sta BORDER_COL
 
