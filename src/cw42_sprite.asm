@@ -15,14 +15,11 @@ SPRITE_INIT
     sta SPR1_COLOR
 
     ; sprite locations
-    lda #140
+    lda #160
     sta SPR0_Y
-    lda #140
     sta SPR1_Y
 
-    lda #100
     sta SPR0_X
-    lda #100
     sta SPR1_X
 
     ; sprite pointers

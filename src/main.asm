@@ -76,7 +76,6 @@ FRAME_DONE
 FRAME_0 
     lda #CW4_CR2_0                   
     sta TILE_BG_CR2
-    jsr TILE_BG_SCROLL_SMC
     jmp FRAME_DONE
 
 FRAME_1
@@ -143,7 +142,7 @@ FRAME_COUNTER
     } else {
         !ifndef PASS3 {
 ;            !warn "Pass 3"
-            !warn "Code size is ", $7FFF-*, " of max 16383 (0x3FFF) (ending at ", *, " of max 32767 (0x7FFF))"
+            !warn "Code size is ", $7FFF-*, " of max 16383 (0x3fff) (ending at ", *, " of max 32767 (0x7fff))"
             !if * > $7FFF {
                 !error "Code has hit the bank 1 boundary!"
             }
