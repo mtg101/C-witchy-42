@@ -106,13 +106,13 @@ FRAME_5
 FRAME_6
     lda #CW42_CR1_6
     sta TILE_BG_CR1
-    jsr TILE_BG_LOAD_TO_OFF_SCREEN
+    jsr TILE_BG_NEXT_FRAME_TO_OFF_SCREEN
     jmp FRAME_DONE
 
 FRAME_7
     lda #CW42_CR1_7
     sta TILE_BG_CR1
-;    jsr TILE_BG_COLOUR_FROM_SCREEN
+    jsr TILE_BG_COLOUR_FROM_OFF_SCREEN
     jmp FRAME_DONE
 
 ; all options jumped back

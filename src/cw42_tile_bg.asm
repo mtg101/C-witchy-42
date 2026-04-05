@@ -18,24 +18,49 @@ TILE_BG_SETUP
 
 
 TILE_BG_STATIC_LOAD
-    ; load chars
-    ; 25 rows of 40 cols
-    ; src: map_data
-    ; dest: SCREEN_RAM
 
-
-    ; zero page setup
-    lda #<map_data
+    ; load chars from map
+    lda #<map_data      ; from map
     sta ZP_PTR_1
     lda #>map_data
     sta ZP_PTR_1_PAIR
 
-    lda #<SCREEN_RAM
+    lda #<SCREEN_RAM    ; to main screen
     sta ZP_PTR_2
     lda #>SCREEN_RAM
     sta ZP_PTR_2_PAIR
 
-    ldx #0    ; 25 rows
+    lda #25
+    sta ZP_PTR_TEMP_0   ; all 25 rows
+
+    jsr TILE_BG_LOAD_MAP_TO_SCREEN
+
+
+    ; load colours
+    ; from main screen
+    lda #<SCREEN_RAM
+    sta ZP_PTR_1
+    lda #>SCREEN_RAM
+    sta ZP_PTR_1_PAIR
+
+    jsr TILE_BG_COLOUR_FROM_SCREEN
+
+    rts
+
+
+TILE_BG_NEXT_FRAME_TO_OFF_SCREEN
+    ; 2 pass copy from map to off screen
+
+    rts
+
+
+TILE_BG_LOAD_MAP_TO_SCREEN
+    ; caller puts source into ZP_PTR_1 pair
+    ; caller puts dest into ZP_PTR_2 pair
+    ; caller puts number of rows in ZP_PTR_TEMP_0
+
+
+    ldx #0    ; row counter
 
 TILE_BG_CHAR_ROW_LOOP
     ldy #0    ; 40 cols
@@ -67,24 +92,24 @@ TILE_BG_CHAR_COL_LOOP
 +
 
     inx
-    cpx #25
+    cpx ZP_PTR_TEMP_0
     bne TILE_BG_CHAR_ROW_LOOP
 
 
-    ; load colours
-    ; from main screen
-    lda #<SCREEN_RAM
-    sta ZP_PTR_1
-    lda #>SCREEN_RAM
-    sta ZP_PTR_1_PAIR
-
-    jsr TILE_BG_COLOUR_FROM_SCREEN
-
     rts
 
-TILE_BG_LOAD_TO_OFF_SCREEN
-    ; 2 pass copy from map to off screen
 
+TILE_BG_COLOUR_FROM_OFF_SCREEN
+    ; work out which off screen
+
+    ; set zp_ptr
+    ; lda #<
+    ; sta ZP_PTR_1
+    ; lda #>
+    ; sta ZP_PTR_1_PAIR
+
+    ; call to copy
+;    jsr TILE_BG_COLOUR_FROM_SCREEN
 
     rts
 
@@ -94,9 +119,8 @@ TILE_BG_COLOUR_FROM_SCREEN
     ; caller puts source into ZP_PTR_1 pair
     ; lda #<SCREEN_RAM
     ; sta ZP_PTR_1
-    ; lda #>map_data
+    ; lda #>SCREEN_RAM
     ; sta ZP_PTR_1_PAIR
-
 
     ; load colours
     ; 25 rows of 40 cols
@@ -164,6 +188,9 @@ TILE_BG_COL_SCR_COL_LOOP
 
 
 TILE_BG_CR1
+    !byte   $00
+
+TILE_BG_MEM_SETUP
     !byte   $00
 
 TILE_BG_MAP_INDEX
