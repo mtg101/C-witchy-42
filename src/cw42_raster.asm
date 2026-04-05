@@ -52,77 +52,48 @@ RASTER_INTERRUPT_SETUP
 
     ; Set the line number where the interrupt triggers
     ; default to row 0
-    +RASTER_INTERRUPT_SET_ROW 54
+    +RASTER_INTERRUPT_SET_ROW 36
 
     ; Point the Vector to our custom routine
-    +SET_IRQ RASTER_IRQ_MAIN_SCREEN
+    +SET_IRQ RASTER_IRQ_LATE_TOP_BORDER
     rts             
 
 
 ; --- INTERRUPT ROUTINES ---
 
+RASTER_IRQ_LATE_TOP_BORDER
+    +PUSH_ALL
+
+    jsr SPRITE_UPDATE_WITCH    ; want to move every frame
+
+    ; update scroll values
+    lda TILE_BG_CR1
+    sta VIC_CR1
+
+    ; update which screen is active (yeah every frame even though only need when flips...)
+    lda TILE_BG_MEM_SETUP
+    sta MEM_SETUP
+
+    +RASTER_INTERRUPT_SET_ROW 54
+    +ACK_IRQ
+    +SET_IRQ RASTER_IRQ_MAIN_SCREEN
+    +PULL_ALL
+    rti
+
+
 RASTER_IRQ_MAIN_SCREEN
-    nop             ; on real c64 can get away with triggering on real raster
-    nop             ; TV doesn't show full border so you don't notice the glitching
-    nop             ; for EMU... you see it - so we go early and pad
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    
     +PUSH_ALL
 
     lda #01
     sta RASTER_CHASE_BEAM   ; tell main loop to go!
 
 
-    +RASTER_INTERRUPT_SET_ROW 246
+    +RASTER_INTERRUPT_SET_ROW 36
     +ACK_IRQ
-    +SET_IRQ RASTER_IRQ_BOTTOM_BORDER
+    +SET_IRQ RASTER_IRQ_LATE_TOP_BORDER
     +PULL_ALL
     rti
 
-RASTER_IRQ_BOTTOM_BORDER
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-
-    +PUSH_ALL
-
-    jsr SPRITE_UPDATE_WITCH    ; want to move every frame
-
-    lda TILE_BG_CR1
-    sta VIC_CR1
-
-    +RASTER_INTERRUPT_SET_ROW 54
-    +ACK_IRQ
-    +SET_IRQ RASTER_IRQ_MAIN_SCREEN
-    +PULL_ALL
-    rti
 
 ; raster flags go 1 when they're ready for main loop (which will need to clear)
 RASTER_CHASE_BEAM

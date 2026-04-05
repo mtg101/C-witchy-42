@@ -51,6 +51,41 @@ TILE_BG_STATIC_LOAD
 TILE_BG_NEXT_FRAME_TO_OFF_SCREEN
     ; 2 pass copy from map to off screen
 
+    ; inc index
+    inc TILE_BG_MAP_INDEX
+
+    lda #50
+    cmp TILE_BG_MAP_INDEX
+
+    bne +
+    lda #0      ; index is 50, reset to 0
+    sta TILE_BG_MAP_INDEX
++
+
+    ; which screen?
+
+
+    ; start map addr
+
+
+    ; how many rows?
+
+
+    ; render 
+
+
+    ; how many extra rows?
+
+
+    ; start addr is start of map - easy
+
+
+    ; screen addr start offset
+
+    ; render    
+
+
+
     rts
 
 
@@ -102,14 +137,25 @@ TILE_BG_CHAR_COL_LOOP
 TILE_BG_COLOUR_FROM_OFF_SCREEN
     ; work out which off screen
 
-    ; set zp_ptr
-    ; lda #<
-    ; sta ZP_PTR_1
-    ; lda #>
-    ; sta ZP_PTR_1_PAIR
+    ; assume default 400 is off
+    lda #<SCREEN_RAM
+    sta ZP_PTR_1
+    lda #>SCREEN_RAM
+    sta ZP_PTR_1_PAIR
 
-    ; call to copy
-;    jsr TILE_BG_COLOUR_FROM_SCREEN
+    lda #TILE_BG_SCREEN_400     ; default screen
+    cmp MEM_SETUP
+
+    bne +
+    ; current showing screen 400, so off is 800
+    lda #<SCREEN_RAM_800
+    sta ZP_PTR_1
+    lda #>SCREEN_RAM_800
+    sta ZP_PTR_1_PAIR
++
+
+    ; render chasing beam...
+    jsr TILE_BG_COLOUR_FROM_SCREEN
 
     rts
 
@@ -179,21 +225,39 @@ TILE_BG_COL_SCR_COL_LOOP
     cpx #25
     bne TILE_BG_COL_SCR_ROW_LOOP
 
+    rts
 
+
+TILE_BG_FLIP_SCREEN
+    ; only flips value, actual flip occurs during top border raster
+
+    ; which is active?
+    lda TILE_BG_MEM_SETUP
+    cmp #TILE_BG_SCREEN_400
+
+    beq TILE_BG_FLIP_SCREEN_TO_800
+TILE_BG_FLIP_SCREEN_TO_400
+    lda #TILE_BG_SCREEN_400
+    jmp TILE_BG_FLIP_SCREEN_DONE
+TILE_BG_FLIP_SCREEN_TO_800
+    lda #TILE_BG_SCREEN_800
+TILE_BG_FLIP_SCREEN_DONE
+    sta TILE_BG_MEM_SETUP
 
     rts
 
 
-
+TILE_BG_SCREEN_400 = %00011101      ; default
+TILE_BG_SCREEN_800 = %00101101      ; other
 
 
 TILE_BG_CR1
-    !byte   $00
+    !byte CW42_CR1_0
 
 TILE_BG_MEM_SETUP
-    !byte   $00
+    !byte TILE_BG_SCREEN_400     ; $0400 screen (default), chars at 3000 (6), 1 always set
 
 TILE_BG_MAP_INDEX
-    !byte   $00
+    !byte $00
 
 

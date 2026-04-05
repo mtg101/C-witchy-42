@@ -22,11 +22,13 @@ SPRITE_INIT
     sta SPR0_X
     sta SPR1_X
 
-    ; sprite pointers
+    ; sprite pointers - for both screens $0400 and $0800
     lda #(witch_sprite_outline / 64)
     sta SPR_PTR0
+    sta SPR_PTR0_800
     lda #(witch_sprite / 64)
     sta SPR_PTR1
+    sta SPR_PTR1_800
 
     ; start all large sprites
     lda #$FF

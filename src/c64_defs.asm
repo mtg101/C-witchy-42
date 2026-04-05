@@ -174,7 +174,7 @@ SPR6_COLOR  = $D02D
 SPR7_COLOR  = $D02E
 
 ; ======================================================
-; Sprite pointer table (in Screen RAM)
+; Sprite pointer table (in Screen RAM $0400)
 ; ======================================================
 SPR_PTR0 = $07F8
 SPR_PTR1 = $07F9
@@ -184,6 +184,20 @@ SPR_PTR4 = $07FC
 SPR_PTR5 = $07FD
 SPR_PTR6 = $07FE
 SPR_PTR7 = $07FF
+
+; ======================================================
+; Sprite pointer table (in Screen RAM $0800)
+; ======================================================
+SPR_PTR0_800 = $0BF8
+SPR_PTR1_800 = $0BF9
+SPR_PTR2_800 = $0BFA
+SPR_PTR3_800 = $0BFB
+SPR_PTR4_800 = $0BFC
+SPR_PTR5_800 = $0BFD
+SPR_PTR6_800 = $0BFE
+SPR_PTR7_800 = $0BFF
+
+
 
 ; --- VIC-II Control Registers ---
 VIC_CR1         = $D011 ; CR1 Vertical scroll, Screen On/Off, Bitmap mode, Raster Bit 8
@@ -201,6 +215,7 @@ VIC_CR2         = $D016 ; CR2 Horizontal scroll, Multi-color mode, 40/38 column 
 ; 6-7	Unused	Not connected. Leave as 1
 RASTER_LINE     = $D012 ; Current scanline (Read) / Trigger line (Write)
 MEM_SETUP       = $D018 ; high nibble: screen 1kb block, bits 1-3 char set 2kb block, bit 0 unused
+MEM_SETUP_DEFAULT = %00010101
 VIC_INTER       = $D019 ; Interrupt Status (ACK)
 VIC_IMASK       = $D01A ; Interrupt Control (Which ones are enabled?)
 VIC_ICR_CIA_1   = $DC0D ; int control reg - set to #$7F to disable timers (read to clear)

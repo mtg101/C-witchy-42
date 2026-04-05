@@ -32,7 +32,6 @@ MAIN
     jsr ROM_CLR_SCREEN
     jsr MATHS_SETUP_RNG
     jsr SCREEN_CHAR_COPY_FROM_MAP
-    jsr SCREEN_CHAR_SET_3000
 
     jmp SYS_NO_BASIC_NO_KERNEL_ROM  ; also does raster irq setup - jmp as it's reclaiming the stack
 SYS_NO_BASIC_NO_KERNEL_ROM_DONE    
@@ -113,6 +112,7 @@ FRAME_7
     lda #CW42_CR1_7
     sta TILE_BG_CR1
     jsr TILE_BG_COLOUR_FROM_OFF_SCREEN
+    jsr TILE_BG_FLIP_SCREEN
     jmp FRAME_DONE
 
 ; all options jumped back

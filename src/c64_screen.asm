@@ -93,6 +93,6 @@ map_loop:
 SCREEN_CHAR_SET_3000
     lda MEM_SETUP      ; Get current Screen/Char settings
     and #%11110001     ; Clear bits 1, 2, and 3 (Keep the Screen pointer)
-    ora #%00001100     ; Set bits 1-3 to %101 (Binary 6)
+    ora #%00001100     ; Set bits 1-3 to %110 (Binary 6)
     sta MEM_SETUP      ; Apply changes
     rts
