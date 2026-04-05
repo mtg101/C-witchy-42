@@ -205,7 +205,7 @@ VIC_INTER       = $D019 ; Interrupt Status (ACK)
 VIC_IMASK       = $D01A ; Interrupt Control (Which ones are enabled?)
 VIC_ICR_CIA_1   = $DC0D ; int control reg - set to #$7F to disable timers (read to clear)
 VIC_ICR_CIA_2   = $DC0D ; int control reg - set to #$7F to disable NMIs (read to clear)
-VIC_BANK        = $DD00 ; lowest 2 bits bank, invested: 00 is bank 3, 11 is bank 0 (other bits are for serial comms, but mask to avoid changing)
+VIC_BANK        = $DD00 ; lowest 2 bits bank, inverted: 00 is bank 3, 11 is bank 0 (other bits are for serial comms, but mask to avoid changing)
 
 
 

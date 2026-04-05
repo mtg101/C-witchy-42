@@ -18,7 +18,6 @@ TILE_BG_SETUP
 
 
 TILE_BG_STATIC_LOAD
-
     ; load chars
     ; 25 rows of 40 cols
     ; src: map_data
@@ -72,19 +71,40 @@ TILE_BG_CHAR_COL_LOOP
     bne TILE_BG_CHAR_ROW_LOOP
 
 
-    ; load cols
+    ; load colours
+    ; from main screen
+    lda #<SCREEN_RAM
+    sta ZP_PTR_1
+    lda #>SCREEN_RAM
+    sta ZP_PTR_1_PAIR
+
+    jsr TILE_BG_COLOUR_FROM_SCREEN
+
+    rts
+
+TILE_BG_LOAD_TO_OFF_SCREEN
+    ; 2 pass copy from map to off screen
+
+
+    rts
+
+TILE_BG_COLOUR_FROM_SCREEN
+    ; read from screen, lookup colour, write to colour ram (chasing beam)
+
+    ; caller puts source into ZP_PTR_1 pair
+    ; lda #<SCREEN_RAM
+    ; sta ZP_PTR_1
+    ; lda #>map_data
+    ; sta ZP_PTR_1_PAIR
+
+
+    ; load colours
     ; 25 rows of 40 cols
-    ; src: map_data plus lookup
+    ; src: off screen
     ; lookup col from char and charset_attrib_data
     ; dest: COLOR_RAM
 
-
-    ; zero page setup
-    lda #<map_data
-    sta ZP_PTR_1
-    lda #>map_data
-    sta ZP_PTR_1_PAIR
-
+    ; zero page setup - always colour ram
     lda #<COLOR_RAM
     sta ZP_PTR_2
     lda #>COLOR_RAM
@@ -97,10 +117,10 @@ TILE_BG_CHAR_COL_LOOP
 
     ldx #0    ; 25 rows
 
-TILE_BG_COL_ROW_LOOP
+TILE_BG_COL_SCR_ROW_LOOP
     ldy #0    ; 40 cols
 
-TILE_BG_COL_COL_LOOP
+TILE_BG_COL_SCR_COL_LOOP
     lda (ZP_PTR_1), y           ; char
 
     sty ZP_PTR_TEMP_1           ; save y
@@ -112,7 +132,7 @@ TILE_BG_COL_COL_LOOP
 
     iny
     cpy #40
-    bne TILE_BG_COL_COL_LOOP
+    bne TILE_BG_COL_SCR_COL_LOOP
 
     ; move pointers to next row
     ; We need to add 40 to our Screen and Map pointers
@@ -133,7 +153,7 @@ TILE_BG_COL_COL_LOOP
 
     inx
     cpx #25
-    bne TILE_BG_COL_ROW_LOOP
+    bne TILE_BG_COL_SCR_ROW_LOOP
 
 
 
@@ -141,6 +161,12 @@ TILE_BG_COL_COL_LOOP
 
 
 
+
+
 TILE_BG_CR1
     !byte   $00
+
+TILE_BG_MAP_INDEX
+    !byte   $00
+
 
