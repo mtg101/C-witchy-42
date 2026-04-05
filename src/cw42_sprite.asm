@@ -56,6 +56,19 @@ SPRITE_UPDATE_WITCH
 
     bne SPRITE_MOVE_LEFT_DONE
 SPRITE_MOVE_LEFT
+    lda SPR_X_MSB
+    beq SPRITE_MOVE_LEFT_MSB0
+
+    ; MSB is 1 - always left, flip MSB if needed
+    dec SPR0_X
+    dec SPR1_X
+    bpl +
+    lda #$00
+    sta SPR_X_MSB
++
+
+    jmp SPRITE_MOVE_LEFT_DONE
+SPRITE_MOVE_LEFT_MSB0   ; move left, check boundaries
     lda SPR0_X
     ldx SPR_X_EXP
     bne +
@@ -79,6 +92,10 @@ SPRITE_MOVE_LEFT_DONE
 
     bne SPRITE_MOVE_RIGHT_DONE
 SPRITE_MOVE_RIGHT
+    lda SPR_X_MSB
+    beq SPRITE_MOVE_RIGHT_MSB0
+
+    ; MSB 1 - move right checking boundary
     lda SPR0_X
     ldx SPR_X_EXP
     bne +
@@ -91,6 +108,19 @@ SPRITE_MOVE_RIGHT
 
     inc SPR0_X
     inc SPR1_X
+
+    jmp SPRITE_MOVE_RIGHT_DONE
+
+SPRITE_MOVE_RIGHT_MSB0  ; always right, flip bit if needed
+    inc SPR0_X
+    inc SPR1_X
+    bne +
+    lda #$FF
+    sta SPR_X_MSB
++
+
+
+
 SPRITE_MOVE_RIGHT_DONE
     ; w - up
     lda #KEY_W_ROW
@@ -214,8 +244,8 @@ SPRITE_READ_KEYS_DONE
 
 SPRITE_WITCH_X_BIG_MIN = SPR_MIN_X 
 SPRITE_WITCH_X_SML_MIN = SPR_MIN_X + (SPR_WIDTH / 2)
-SPRITE_WITCH_X_BIG_MAX = 240
-SPRITE_WITCH_X_SML_MAX = 240 + (SPR_WIDTH / 2)
+SPRITE_WITCH_X_BIG_MAX = 52
+SPRITE_WITCH_X_SML_MAX = 52 + (SPR_WIDTH / 2)
 SPRITE_WITCH_Y_BIG_MIN = SPR_MIN_Y +4 ; hiding for scrolling
 SPRITE_WITCH_Y_SML_MIN = SPR_MIN_Y +4 + (SPR_HEIGHT / 2); hiding for scrolling
 SPRITE_WITCH_Y_BIG_MAX = 204
