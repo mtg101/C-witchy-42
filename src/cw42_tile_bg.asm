@@ -117,6 +117,8 @@ TILE_BG_NEXT_FRAME_TO_OFF_SCREEN
 
     beq +                   ; 0 rows, so skip
 
+    sta ZP_PTR_TEMP_0       ; num rows
+
     ; start addr is start of map - easy
     lda #<map_data
     sta ZP_PTR_1
