@@ -119,8 +119,6 @@ FRAME_7
 
 ; all options jumped back
 
-
-
 CW42_CR1_7 = %00010111
 CW42_CR1_6 = %00010110
 CW42_CR1_5 = %00010101
@@ -131,10 +129,8 @@ CW42_CR1_1 = %00010001
 CW42_CR1_0 = %00010000
 
 
-
 FRAME_COUNTER
     !byte   $00
-
 
 ; --- End of code section ---
 

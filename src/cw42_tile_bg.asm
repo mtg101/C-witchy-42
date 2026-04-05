@@ -140,10 +140,12 @@ TILE_BG_CHAR_ROW_LOOP
 
 TILE_BG_CHAR_COL_LOOP
     ; copy map to screen, zero page
-    lda (ZP_PTR_1), y
-    sta (ZP_PTR_2), y
+    !for 1, 1, 10 {
+        lda (ZP_PTR_1), y
+        sta (ZP_PTR_2), y
+        iny
+    }
 
-    iny
     cpy #40
     bne TILE_BG_CHAR_COL_LOOP
 
