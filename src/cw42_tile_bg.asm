@@ -52,40 +52,83 @@ TILE_BG_NEXT_FRAME_TO_OFF_SCREEN
     ; 2 pass copy from map to off screen
 
     ; inc index
-    inc TILE_BG_MAP_INDEX
+    dec TILE_BG_MAP_INDEX
 
-    lda #50
-    cmp TILE_BG_MAP_INDEX
-
-    bne +
-    lda #0      ; index is 50, reset to 0
+    bpl +
+    lda #49      ; reset to 49
     sta TILE_BG_MAP_INDEX
 +
 
-    ; which screen?
+    ; source map_data + offset
+    ldx TILE_BG_MAP_INDEX    ; X = 0 to 49
+    lda row_low,x
+    sta ZP_PTR_1          ; Offset Low
+    lda row_high,x
+    sta ZP_PTR_1_PAIR          ; Offset High
+    
+    ; Now add the base address of your map
+    clc
+    lda ZP_PTR_1
+    adc #<map_data
+    sta ZP_PTR_1
+    lda ZP_PTR_1_PAIR
+    adc #>map_data
+    sta ZP_PTR_1_PAIR
+    
+    ; ZP_PTR_1 pair now points exactly to the start of correct map row
 
+    ; which screen is dest?
+    ; assume default 400 is off
+    lda #<SCREEN_RAM
+    sta ZP_PTR_2
+    lda #>SCREEN_RAM
+    sta ZP_PTR_2_PAIR
 
-    ; start map addr
+    lda #TILE_BG_SCREEN_400     ; default screen
+    cmp MEM_SETUP
 
+    bne +
+    ; current showing screen 400, so off is 800
+    lda #<SCREEN_RAM_800
+    sta ZP_PTR_2
+    lda #>SCREEN_RAM_800
+    sta ZP_PTR_2_PAIR
++
 
-    ; how many rows?
+    ; how many rows? 50 - TILE_BG_MAP_INDEX, max 25
+    lda #50
+    sec                     ; Prepare for subtraction
+    sbc TILE_BG_MAP_INDEX   ; a is now 1-50
 
+    cmp #25
+    bcc +                   ; if a < 25, carry is clear, so jump
+    lda #25                 ; max 25
++
+    sta ZP_PTR_TEMP_0       ; 1-25 rows
 
     ; render 
+    jsr TILE_BG_LOAD_MAP_TO_SCREEN
 
 
     ; how many extra rows?
+    lda #25
+    sec                     ; Prepare for subtraction
+    sbc ZP_PTR_TEMP_0       ; 1-25 rows -- so a now has 0-24 rows
 
+    beq +                   ; 0 rows, so skip
 
     ; start addr is start of map - easy
+    lda #<map_data
+    sta ZP_PTR_1
+    lda #>map_data
+    sta ZP_PTR_1_PAIR
 
-
-    ; screen addr start offset
+    ; screen addr - already ready in ZP_PTR_2 pair from previous render
 
     ; render    
+    jsr TILE_BG_LOAD_MAP_TO_SCREEN
 
-
-
++
     rts
 
 
@@ -260,4 +303,28 @@ TILE_BG_MEM_SETUP
 TILE_BG_MAP_INDEX
     !byte $00
 
+; lookup table for mem offsets
+
+; usage
+;     ldx row_index    ; X = 0 to 49
+;     lda row_low,x
+;     sta $fb          ; Offset Low
+;     lda row_high,x
+;     sta $fc          ; Offset High
+    
+;     ; Now add the base address of your map
+;     clc
+;     lda $fb
+;     adc #<map_data
+;     sta $fb
+;     lda $fc
+;     adc #>map_data
+;     sta $fc
+    
+;     ; $fb/$fc now points exactly to the start of that row!
+
+row_low:
+    !for i, 0, 49 { !byte <(i*40) }
+row_high:
+    !for i, 0, 49 { !byte >(i*40) }
 
