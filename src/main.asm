@@ -75,6 +75,10 @@ FRAME_DONE
 FRAME_0 
     lda #CW42_CR1_0                   
     sta TILE_BG_CR1
+
+    jsr TILE_BG_COLOUR_FROM_OFF_SCREEN
+    jsr TILE_BG_FLIP_SCREEN
+
     jmp FRAME_DONE
 
 FRAME_1
@@ -105,14 +109,12 @@ FRAME_5
 FRAME_6
     lda #CW42_CR1_6
     sta TILE_BG_CR1
-    jsr TILE_BG_NEXT_FRAME_TO_OFF_SCREEN
     jmp FRAME_DONE
 
 FRAME_7
     lda #CW42_CR1_7
     sta TILE_BG_CR1
-    jsr TILE_BG_COLOUR_FROM_OFF_SCREEN
-    jsr TILE_BG_FLIP_SCREEN
+    jsr TILE_BG_NEXT_FRAME_TO_OFF_SCREEN
     jmp FRAME_DONE
 
 ; all options jumped back
@@ -146,7 +148,7 @@ FRAME_COUNTER
     } else {
         !ifndef PASS3 {
 ;            !warn "Pass 3"
-            !warn "Code size is ", $7FFF-*, " of max 16383 (0x3fff) (ending at ", *, " of max 32767 (0x7fff))"
+            !warn "Code size is ", *-$4000, " of max 16383 (0x3fff) (ending at ", *, " of max 32767 (0x7fff))"
             !if * > $7FFF {
                 !error "Code has hit the bank 1 boundary!"
             }

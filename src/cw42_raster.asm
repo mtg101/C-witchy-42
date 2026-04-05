@@ -87,7 +87,6 @@ RASTER_IRQ_MAIN_SCREEN
     lda #01
     sta RASTER_CHASE_BEAM   ; tell main loop to go!
 
-
     +RASTER_INTERRUPT_SET_ROW 36
     +ACK_IRQ
     +SET_IRQ RASTER_IRQ_LATE_TOP_BORDER

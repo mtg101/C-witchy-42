@@ -35,15 +35,8 @@ TILE_BG_STATIC_LOAD
 
     jsr TILE_BG_LOAD_MAP_TO_SCREEN
 
-
-    ; load colours
-    ; from main screen
-    lda #<SCREEN_RAM
-    sta ZP_PTR_1
-    lda #>SCREEN_RAM
-    sta ZP_PTR_1_PAIR
-
-    jsr TILE_BG_COLOUR_FROM_SCREEN
+    ; load colours from main screen
+    jsr TILE_BG_COLOUR_FROM_SCREEN_400
 
     rts
 
@@ -175,100 +168,153 @@ TILE_BG_CHAR_COL_LOOP
     cpx ZP_PTR_TEMP_0
     bne TILE_BG_CHAR_ROW_LOOP
 
-
     rts
-
 
 TILE_BG_COLOUR_FROM_OFF_SCREEN
     ; work out which off screen
 
-    ; assume default 400 is off
-    lda #<SCREEN_RAM
-    sta ZP_PTR_1
-    lda #>SCREEN_RAM
-    sta ZP_PTR_1_PAIR
-
     lda #TILE_BG_SCREEN_400     ; default screen
     cmp MEM_SETUP
 
-    bne +
+    bne TILE_BG_COLOUR_FROM_OFF_SCREEN_400
+
     ; current showing screen 400, so off is 800
-    lda #<SCREEN_RAM_800
-    sta ZP_PTR_1
-    lda #>SCREEN_RAM_800
-    sta ZP_PTR_1_PAIR
+    jsr TILE_BG_COLOUR_FROM_SCREEN_800
+    jmp TILE_BG_COLOUR_FROM_OFF_SCREEN_DONE
+
+TILE_BG_COLOUR_FROM_OFF_SCREEN_400
+    ; current showing screen 800, so off is 400
+    jsr TILE_BG_COLOUR_FROM_SCREEN_400
+
+TILE_BG_COLOUR_FROM_OFF_SCREEN_DONE
+    rts
+
+TILE_BG_COLOUR_FROM_SCREEN_400
+    ; read from screen, lookup colour, write to colour ram (chasing beam)
+
+    ; first 250 chars
+    ldy #0 
+-
+    !for i, 1, 50 {
+        ldx SCREEN_RAM, y           ; char
+        lda charset_attrib_data, x  ; lookup color from table
+        sta COLOR_RAM, y            ; save color
+        iny
+    }
+
+    cpy #250
+    beq +
+    jmp -
++
+    ; second 250 chars
+    ldy #0 
+-
+    !for i, 1, 50 {
+        ldx SCREEN_RAM+250, y           ; char
+        lda charset_attrib_data, x  ; lookup color from table
+        sta COLOR_RAM+250, y            ; save color
+        iny
+    }
+
+    cpy #250
+    beq +
+    jmp -
 +
 
-    ; render chasing beam...
-    jsr TILE_BG_COLOUR_FROM_SCREEN
+    ; third 250 chars
+    ldy #0 
+-
+    !for i, 1, 50 {
+        ldx SCREEN_RAM+500, y           ; char
+        lda charset_attrib_data, x  ; lookup color from table
+        sta COLOR_RAM+500, y            ; save color
+        iny
+    }
+
+    cpy #250
+    beq +
+    jmp -
++
+
+    ; fourth 250 chars
+    ldy #0 
+-
+    !for i, 1, 50 {
+        ldx SCREEN_RAM+750, y           ; char
+        lda charset_attrib_data, x  ; lookup color from table
+        sta COLOR_RAM+750, y            ; save color
+        iny
+    }
+
+    cpy #250
+    beq +
+    jmp -
++
 
     rts
 
-TILE_BG_COLOUR_FROM_SCREEN
+TILE_BG_COLOUR_FROM_SCREEN_800
     ; read from screen, lookup colour, write to colour ram (chasing beam)
 
-    ; caller puts source into ZP_PTR_1 pair
-    ; lda #<SCREEN_RAM
-    ; sta ZP_PTR_1
-    ; lda #>SCREEN_RAM
-    ; sta ZP_PTR_1_PAIR
+    ; first 250 chars
+    ldy #0 
+-
+    !for i, 1, 50 {
+        ldx SCREEN_RAM_800, y           ; char
+        lda charset_attrib_data, x  ; lookup color from table
+        sta COLOR_RAM, y            ; save color
+        iny
+    }
 
-    ; load colours
-    ; 25 rows of 40 cols
-    ; src: off screen
-    ; lookup col from char and charset_attrib_data
-    ; dest: COLOR_RAM
-
-    ; zero page setup - always colour ram
-    lda #<COLOR_RAM
-    sta ZP_PTR_2
-    lda #>COLOR_RAM
-    sta ZP_PTR_2_PAIR
-
-    lda #<charset_attrib_data
-    sta ZP_PTR_TEMP_0
-    lda #>charset_attrib_data
-    sta ZP_PTR_TEMP_0_PAIR
-
-    ldx #0    ; 25 rows
-
-TILE_BG_COL_SCR_ROW_LOOP
-    ldy #0    ; 40 cols
-
-TILE_BG_COL_SCR_COL_LOOP
-    lda (ZP_PTR_1), y           ; char
-
-    sty ZP_PTR_TEMP_1           ; save y
-    tay                         ; char index to y
-    lda (ZP_PTR_TEMP_0), y      ; lookup color from table
-
-    ldy ZP_PTR_TEMP_1           ; restore y
-    sta (ZP_PTR_2), y           ; save color
-
-    iny
-    cpy #40
-    bne TILE_BG_COL_SCR_COL_LOOP
-
-    ; move pointers to next row
-    ; We need to add 40 to our Screen and Map pointers
-    clc
-    lda ZP_PTR_1
-    adc #40             ; Add 40 to Map Low Byte
-    sta ZP_PTR_1
-    bcc +               ; If no carry, skip high byte inc
-    inc ZP_PTR_1_PAIR
-+   
-    clc
-    lda ZP_PTR_2
-    adc #40             ; Add 40 to Screen Low Byte
-    sta ZP_PTR_2
-    bcc +
-    inc ZP_PTR_2_PAIR
+    cpy #250
+    beq +
+    jmp -
 +
 
-    inx
-    cpx #25
-    bne TILE_BG_COL_SCR_ROW_LOOP
+    ; second 250 chars
+    ldy #0 
+-
+    !for i, 1, 50 {
+        ldx SCREEN_RAM_800+250, y           ; char
+        lda charset_attrib_data, x  ; lookup color from table
+        sta COLOR_RAM+250, y            ; save color
+        iny
+    }
+
+    cpy #250
+    beq +
+    jmp -
++
+
+    ; third 250 chars
+    ldy #0 
+-
+    !for i, 1, 50 {
+        ldx SCREEN_RAM_800+500, y           ; char
+        lda charset_attrib_data, x  ; lookup color from table
+        sta COLOR_RAM+500, y            ; save color
+        iny
+    }
+
+    cpy #250
+    beq +
+    jmp -
++
+
+    ; fourth 250 chars
+    ldy #0 
+-
+    !for i, 1, 50 {
+        ldx SCREEN_RAM_800+750, y           ; char
+        lda charset_attrib_data, x  ; lookup color from table
+        sta COLOR_RAM+750, y            ; save color
+        iny
+    }
+
+    cpy #250
+    beq +
+    jmp -
++
 
     rts
 
