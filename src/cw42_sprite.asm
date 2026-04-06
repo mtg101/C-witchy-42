@@ -197,6 +197,10 @@ SPRITE_OVER_UNDER_FLIP_BIG
     lda SPR0_X
     sec                 ; Prepare for subtraction
     sbc #(SPR_WIDTH / 2)
+    bcs +
+    ldx #$00            ; went negative, so MSB
+    stx SPR_X_MSB
++
     sta SPR0_X
     sta SPR1_X
 
@@ -214,6 +218,10 @@ SPRITE_OVER_UNDER_FLIP_SMALL
     lda SPR0_X
     clc                 ; Prepare for addition
     adc #(SPR_WIDTH / 2)
+    bcc +
+    ldx #$ff            ; looped, so set MSB
+    stx SPR_X_MSB
++
     sta SPR0_X
     sta SPR1_X
 
